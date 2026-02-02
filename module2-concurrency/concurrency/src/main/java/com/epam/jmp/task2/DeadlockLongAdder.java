@@ -1,4 +1,4 @@
-package com.epam.jmp.task2.deadlock;
+package com.epam.jmp.task2;
 
 import java.util.Random;
 import java.util.concurrent.atomic.LongAdder;

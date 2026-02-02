@@ -37,3 +37,15 @@ Build an asynchronous message bus where producers post messages to topics and co
 
 Classic Producer-Consumer with topic-based filtering, like a simple pub-sub system.
 
+---
+
+# Task 4: Blocking Object Pool
+
+Simple object pool for multithreaded environment. Pool blocks when empty (on `get()`) or full (on `take()`).
+
+**Two implementations:**
+- **BlockingObjectPool** - Uses `ArrayBlockingQueue` from `java.util.concurrent`. Simple and efficient, leverages built-in blocking operations.
+- **BlockingObjectPoolWithDeque** - Custom implementation using `ArrayDeque` with manual synchronization (`wait()`/`notifyAll()`). Demonstrates low-level thread coordination without concurrent collections.
+
+Both ensure thread-safe access to a fixed-size pool of objects. Workers block until resources are available.
+
