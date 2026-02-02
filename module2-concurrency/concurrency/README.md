@@ -1,47 +1,39 @@
+# Task 1: HashMap Concurrency Experiment
+
+One thread adds elements to a HashMap while another iterates and sums values. Plain `HashMap` throws `ConcurrentModificationException` due to fail-fast iterators.
+
+**Solutions implemented:**
+- **ConcurrentHashMap** - Best general solution, allows concurrent reads/writes
+- **Collections.synchronizedMap()** - Works but needs external locking for iteration
+- **Custom SynchronizedMap** - Single lock guards all access, simple but slower
+- **Custom CopyOnWriteMap** - Volatile reference to immutable snapshots, great for read-heavy workloads but expensive writes
+
+Tested across Java 8, 11, and 21. Behavior consistent, newer JVMs slightly faster. Use `ConcurrentHashMap` unless you have specific needs.
+
+---
+
 # Task 2: Thread-Safe Collection Operations
 
-## The Problem
+Three threads work with shared data: one writes random numbers, another calculates sum, third calculates square root of sum of squares. Must be thread-safe without deadlocks.
 
-The task was to create three threads that work with a shared collection:
-- One thread continuously writes random numbers
-- Another calculates and prints the sum
-- A third calculates the square root of the sum of squares
+**Four approaches:**
+- **Synchronized Block** - All threads lock on same ArrayList, simple but blocking
+- **ReentrantLock** - Manual lock/unlock in try-finally, more flexible control
+- **CopyOnWriteArrayList** - Copy on write, readers never block, expensive writes
+- **LongAdder** - Atomic variables for running totals, lock-free and fast, can't retrieve individual values
 
-Everything needs to be thread-safe without causing deadlocks.
-
-## How I Solved It
-I implemented four different approaches to compare their trade-offs:
-
-**1. Synchronized Block** - The simplest solution using Java's built-in synchronization. All threads lock on the same ArrayList, so only one can access it at a time. Easy to understand but threads block each other.
-
-**2. ReentrantLock** - Similar to synchronized blocks but gives more control. You manually lock and unlock in try-finally blocks. More flexible if you need features like tryLock() or fairness policies.
-
-**3. CopyOnWriteArrayList** - A concurrent collection that creates a new copy on every write. Readers never block, which is great for read-heavy scenarios. The downside is higher memory usage and expensive writes.
-
-**4. LongAdder** - Instead of keeping all numbers in a collection, this approach just maintains running totals using atomic variables. Super fast and lock-free, perfect when you only need aggregated values. Can't retrieve individual numbers though.
-All approaches avoid deadlocks by using a single lock or lock-free structures. Choose based on your needs: traditional locking for full control, CopyOnWriteArrayList for lots of reads, or LongAdder when you only care about totals.
+All avoid deadlocks via single lock or lock-free structures.
 
 ---
 
 # Task 3: Message Bus (Producer-Consumer Pattern)
 
-## The Problem
+Build an asynchronous message bus where producers post messages to topics and consumers subscribe to specific topics. Multiple producers/consumers run in parallel. Can't use `java.util.concurrent` queues.
 
-Build an asynchronous message bus where:
-- Producers generate random messages with topics and post them to a queue
-- Consumers subscribe to specific topics and log messages they receive
-- Multiple producers and consumers run in parallel
-- Can't use `java.util.concurrent` queue implementations
+**Implementation:**
+- **MessageBusQueue** - Custom `LinkedList` with `synchronized` blocks, `wait()` and `notifyAll()`. Producers wait when full, consumers wait when empty or no matching topic.
+- **Producer** - Generates random messages every 300ms
+- **Consumer** - Takes messages matching subscribed topic only
 
-## How I Solved It
-
-I implemented a custom **MessageBusQueue** using a plain `LinkedList` with manual synchronization. The key challenge was making consumers topic-aware without using concurrent queues.
-
-**MessageBusQueue** - Uses `synchronized` blocks with `wait()` and `notifyAll()` for thread coordination. When the queue is full, producers wait. When it's empty (or no matching topic), consumers wait. The `take()` method iterates through the queue to find messages matching the consumer's topic.
-
-**Producer** - Generates messages with random topics every 300ms and puts them in the queue. If the queue is full, it blocks until space becomes available.
-
-**Consumer** - Continuously tries to take messages for its specific topic. It waits if no matching messages are in the queue.
-
-The solution demonstrates classic Producer-Consumer with a twist: topic-based filtering. Each consumer only processes messages for its subscribed topic, making it more like a simple pub-sub system than a basic queue.
+Classic Producer-Consumer with topic-based filtering, like a simple pub-sub system.
 
