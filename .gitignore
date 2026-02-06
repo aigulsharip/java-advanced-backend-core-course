@@ -1,0 +1,7 @@
+target/
+.idea/
+*.iml
+
+module2-concurrency/concurrency/target
+module2-concurrency/concurrency/.idea/
+module2-concurrency/concurrency/*.iml
