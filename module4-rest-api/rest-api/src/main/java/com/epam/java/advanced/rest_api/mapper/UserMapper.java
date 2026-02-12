@@ -16,13 +16,11 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "updated", ignore = true)
-    @Mapping(target = "deleted", ignore = true)
     User createUser(UserCreateRequest newUserRequest);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "updated", ignore = true)
-    @Mapping(target = "deleted", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 
     UserResponseDto toUserResponse(User user);

@@ -6,6 +6,9 @@ import com.epam.java.advanced.rest_api.model.dto.UserUpdateRequest;
 import com.epam.java.advanced.rest_api.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/users")
@@ -44,8 +43,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserResponseDto> list() {
-        return userService.list();
+    public Page<UserResponseDto>  list(Pageable pageable) {
+        return userService.list(pageable);
     }
 
     @PutMapping("/{id}")
