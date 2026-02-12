@@ -11,6 +11,7 @@ import com.epam.java.advanced.rest_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserService {
             throw new ConflictException(EMAIL_EXISTS_ERROR);
         }
         User newUser = userMapper.createUser(request);
+        newUser.setPassword(passwordEncoder.encode(request.password()));
         userRepository.save(newUser);
         return userMapper.toUserResponse(newUser);
     }
