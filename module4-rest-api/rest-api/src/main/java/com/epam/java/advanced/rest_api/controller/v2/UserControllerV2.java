@@ -1,4 +1,4 @@
-package com.epam.java.advanced.rest_api.controller;
+package com.epam.java.advanced.rest_api.controller.v2;
 
 import com.epam.java.advanced.rest_api.model.dto.UserCreateRequest;
 import com.epam.java.advanced.rest_api.model.dto.UserResponseDto;
@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,16 +18,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserControllerV2 {
 
     private final UserService userService;
 
-    @GetMapping("/health")
-    public String health() {
-        return "OK";
+    // This list method returns a paginated list of users, allowing clients to specify page size and number
+    @GetMapping
+    public Page<UserResponseDto> list(Pageable pageable) {
+        return userService.listPagination(pageable);
     }
 
     @PostMapping
@@ -40,11 +41,6 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponseDto getById(@PathVariable Integer id) {
         return userService.getById(id);
-    }
-
-    @GetMapping
-    public Page<UserResponseDto>  list(Pageable pageable) {
-        return userService.list(pageable);
     }
 
     @PutMapping("/{id}")
