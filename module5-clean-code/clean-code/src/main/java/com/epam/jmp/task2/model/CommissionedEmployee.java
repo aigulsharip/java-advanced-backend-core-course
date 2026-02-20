@@ -1,26 +1,35 @@
-package com.epam.jmp.task2;
+package com.epam.jmp.task2.model;
 
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.util.Currency;
 
-public final class CommissionedEmployee extends Employee {
-    private final Money basePay;
-    private final Money commission;
+import static com.epam.jmp.task2.utils.Constants.DEFAULT_COMMISSION_BONUS_RATE;
+import static com.epam.jmp.task2.utils.Constants.USD;
 
-    public CommissionedEmployee(String name, Money basePay, Money commission) {
-        super(name);
-        this.basePay = Objects.requireNonNull(basePay, "basePay");
-        this.commission = Objects.requireNonNull(commission, "commission");
+public class CommissionedEmployee extends Employee {
+
+    private final BigDecimal basePay;
+    private final BigDecimal salesAmount;
+    private final BigDecimal commissionRate;
+
+    public CommissionedEmployee(String name, BigDecimal basePay, BigDecimal salesAmount, BigDecimal commissionRate) {
+        this.name = name;
+        this.basePay = basePay;
+        this.salesAmount = salesAmount;
+        this.commissionRate = commissionRate;
     }
 
     @Override
     public Money calculatePay() {
-        return basePay.plus(commission);
+        BigDecimal commission = salesAmount.multiply(commissionRate);
+        BigDecimal totalPay = basePay.add(commission);
+        return new Money(totalPay, Currency.getInstance(USD));
     }
 
     @Override
     public Money calculateBonus() {
-        // Simple sample rule: 10% of commission.
-        return new Money(commission.amount().multiply(java.math.BigDecimal.valueOf(0.10)));
+        BigDecimal commission = salesAmount.multiply(commissionRate);
+        BigDecimal bonus = commission.multiply(DEFAULT_COMMISSION_BONUS_RATE);
+        return new Money(bonus, Currency.getInstance(USD));
     }
 }
-

@@ -1,9 +1,10 @@
-package com.epam.jmp.task2;
-
-import com.epam.jmp.task2.model.Employee;
+package com.epam.jmp.task2.model;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+
+import static com.epam.jmp.task2.utils.Constants.DEFAULT_SALARY_BONUS_RATE;
+import static com.epam.jmp.task2.utils.Constants.USD;
 
 public class SalariedEmployee extends Employee {
 

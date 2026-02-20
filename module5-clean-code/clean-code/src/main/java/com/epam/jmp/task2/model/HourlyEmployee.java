@@ -1,7 +1,10 @@
-package com.epam.jmp.task2;
+package com.epam.jmp.task2.model;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+
+import static com.epam.jmp.task2.utils.Constants.DEFAULT_BONUS_HOURS;
+import static com.epam.jmp.task2.utils.Constants.USD;
 
 public class HourlyEmployee extends Employee {
 

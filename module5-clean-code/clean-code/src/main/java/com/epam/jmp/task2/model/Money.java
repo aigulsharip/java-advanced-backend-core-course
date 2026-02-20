@@ -1,4 +1,4 @@
-package com.epam.jmp.task2;
+package com.epam.jmp.task2.model;
 
 import java.math.BigDecimal;
 import java.util.Currency;
