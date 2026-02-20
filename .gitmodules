@@ -1,0 +1,3 @@
+[submodule "module1-java8-and-upper/jmp-parent"]
+	path = module1-java8-and-upper/jmp-parent
+	url = https://gitlab.com/aigul_sharip/jmp-parent
